@@ -1,4 +1,4 @@
-package echojwt
+package jwtMiddleware
 
 import (
 	"crypto/rsa"

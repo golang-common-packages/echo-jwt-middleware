@@ -1,14 +1,11 @@
-package echojwt
+package jwtMiddleware
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-)
 )
 
-// Storage store function in jwt package
-type Storage interface {
+// Assertion interface for Echo JWT Middleware
+type Assertion interface {
 	Middleware(publicKey string) echo.MiddlewareFunc
 	RefreshTokentMiddleware(publicKey string) echo.MiddlewareFunc
 	CreateNewTokens(accessTokenPrivateKey, refreshTokenPrivateky, data, tokenType string, timeout int, isAdmin bool) (accessToken, refreshToken string, err error)
