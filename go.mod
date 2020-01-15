@@ -1,4 +1,4 @@
-module github.com/golang-microservices/echo-jwt-middleware
+module github.com/golang-common-packages/echo-jwt-middleware
 
 go 1.13
 
