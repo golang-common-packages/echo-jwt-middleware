@@ -12,4 +12,6 @@ type Assertion interface {
 	GenerateAccessToken(privateKey, data, tokenType string, timeout int, isAdmin bool) (string, error)
 	GenerateRefreshToken(privateKey, data, tokenType string, timeout int, isAdmin bool) (string, error)
 	Validate(scope string, c echo.Context) error
+	GetEmailFromContext(e echo.Context) string
+	GetTokenTypeFromContext(e echo.Context) string
 }

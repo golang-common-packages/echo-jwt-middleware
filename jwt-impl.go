@@ -23,7 +23,7 @@ var (
 	refreshTokenMiddleware echo.MiddlewareFunc
 )
 
-// Client manage all redis action
+// Client manage all methods
 type Client struct{}
 
 // Middleware function will provide an echo middleware for jwt token
@@ -91,18 +91,18 @@ func (c *Client) RefreshTokentMiddleware(publicKey string) echo.MiddlewareFunc {
 }
 
 // CreateNewTokens function will return access & refresh token
-func (c *Client) CreateNewTokens(accessTokenPrivateKey, refreshTokenPrivateky, data, tokenType string, timeout int, isAdmin bool) (accessToken, refreshToken string, err error) {
+func (c *Client) CreateNewTokens(accessTokenPrivateKey, refreshTokenPrivateky, email, tokenType string, timeout int, isAdmin bool) (accessToken, refreshToken string, err error) {
 	// Apply Goroutines for generate access and refresh token
 	tokenWaitGroup.Add(2)
 	go func() {
-		accessToken, err = c.GenerateAccessToken(accessTokenPrivateKey, data, tokenType, timeout, isAdmin)
+		accessToken, err = c.GenerateAccessToken(accessTokenPrivateKey, email, tokenType, timeout, isAdmin)
 		if err != nil {
 			panic(err)
 		}
 		tokenWaitGroup.Done()
 	}()
 	go func() {
-		refreshToken, err = c.GenerateRefreshToken(refreshTokenPrivateky, data, tokenType, timeout, isAdmin)
+		refreshToken, err = c.GenerateRefreshToken(refreshTokenPrivateky, email, tokenType, timeout, isAdmin)
 		if err != nil {
 			panic(err)
 		}
@@ -114,7 +114,7 @@ func (c *Client) CreateNewTokens(accessTokenPrivateKey, refreshTokenPrivateky, d
 }
 
 // GenerateAccessToken function will generate access token
-func (c *Client) GenerateAccessToken(privateKey, data, tokenType string, timeout int, isAdmin bool) (string, error) {
+func (c *Client) GenerateAccessToken(privateKey, email, tokenType string, timeout int, isAdmin bool) (string, error) {
 	// Read private key
 
 	bytes, err := ioutil.ReadFile(privateKey)
@@ -130,7 +130,7 @@ func (c *Client) GenerateAccessToken(privateKey, data, tokenType string, timeout
 
 	// Set custom claims
 	claims := &JWTCustomClaims{
-		data,
+		email,
 		tokenType,
 		isAdmin,
 		jwt.StandardClaims{
@@ -151,7 +151,7 @@ func (c *Client) GenerateAccessToken(privateKey, data, tokenType string, timeout
 }
 
 // GenerateRefreshToken function will generate refresh token
-func (c *Client) GenerateRefreshToken(privateKey, data, tokenType string, timeout int, isAdmin bool) (string, error) {
+func (c *Client) GenerateRefreshToken(privateKey, email, tokenType string, timeout int, isAdmin bool) (string, error) {
 	// Read private key
 	bytes, err := ioutil.ReadFile(privateKey)
 	if err != nil {
@@ -166,7 +166,7 @@ func (c *Client) GenerateRefreshToken(privateKey, data, tokenType string, timeou
 
 	// Set custom claims
 	claims := &JWTCustomClaims{
-		data,
+		email,
 		tokenType,
 		isAdmin,
 		jwt.StandardClaims{

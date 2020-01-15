@@ -4,7 +4,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// JWTCustomClaims model for custom claims
+// JWTCustomClaims model for custom claim
 type JWTCustomClaims struct {
 	Email     string `json:"email"`
 	TokenType string `json:"tokenType"`
